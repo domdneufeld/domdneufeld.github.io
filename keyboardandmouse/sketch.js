@@ -1,8 +1,17 @@
-// Keyboard and Mouse
+// Interactive scene
 // Dom Neufeld
 // February 8th, 2018
 
-// left mouse button draw a rectangle there
-// Right mouse button draw a circle there
-// w key reset sketch with white background
-// b key reset sketch with black background 
+
+// Global Variables
+let x;
+let y;
+
+//Functions
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+}
+
+function draw() {
+  background(255);
+}
