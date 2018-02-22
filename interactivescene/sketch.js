@@ -44,6 +44,11 @@ function draw() {
   if (mouseIsPressed) {
     drawRandomShape(mouseX, mouseY, colour);
   }
+
+  //Instructions
+  fill(0)
+  textSize(16)
+  text("Press 'a' and 'd' to control colour, and click to draw shapes.",5,15)
 }
 
 function drawSphere(x, y, colour) {
