@@ -2,6 +2,9 @@
 // Domenic Neufeld
 // February 9th, 2018
 
+// Extra for experts: Used the random function to draw randomly created triangles and
+// rectangles depending on which half of the screen you click
+
 
 // Global Variables
 let sphereX;
