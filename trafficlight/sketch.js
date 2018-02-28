@@ -1,6 +1,6 @@
-//Traffic Light Starter Code
-//Dan Schellenberg
-//Feb 23, 2018
+//Traffic Light
+//Dom Neufeld
+//Feb 28, 2018
 
 //GOAL: make a 'traffic light' simulator. For now, just have the light
 // changing according to time. You may want to investigate the millis()
@@ -15,17 +15,18 @@ function setup() {
 function draw() {
   background(255);
   drawOutlineOfLights();
-  
+  determineState();
 
-  if (timer < 300) {
+  // Runs the timer, and resets it back to zero once it reaches the end.
+  // timer goes up 60 per second
+  if (timer < 600) {
     timer = timer + 1;
   }
   else {
     timer = 0;
   }
-  print(timer);
 
-  light();
+  displayCorrectLight();
 }
 
 function drawOutlineOfLights() {
@@ -42,28 +43,29 @@ function drawOutlineOfLights() {
 }
 
 function determineState() {
-  if (timer < 120) {
-    state = 1;
+  // Changes state based on how long the timer has been running
+  if (timer < 240) {
+    state = 3;
   }
-  else if (timer < 180) {
+  else if (timer < 360) {
     state = 2;
   }
   else {
-    state = 3;
+    state = 1;
   }
 }
 
-function light() {
+function displayCorrectLight() {
   if (state === 1) {
-    fill(0, 255, 0);
+    fill(255, 0, 0);
     ellipse(width / 2, height / 2 - 65, 50, 50); //top
   }
   else if (state === 2) {
-    fill("yellow");
+    fill(255, 255, 0);
     ellipse(width / 2, height / 2, 50, 50); //middle
   }
-  else if (state === 3) {
-    fill(255, 0, 0);
+  else {
+    fill(0, 255, 0);
     ellipse(width / 2, height / 2 + 65, 50, 50); //bottom
   }
 }
