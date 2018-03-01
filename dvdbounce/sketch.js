@@ -8,6 +8,9 @@ let dx, dy;
 let dvd, dvdColor;
 let state;
 
+let mouseXInButton;
+let mouseYInButton;
+
 function preload() {
   dvd = loadImage("images/logo.png");
 }
@@ -25,6 +28,7 @@ function setup() {
 
 function draw() {
   background(255);
+  checkIfMouseInButton();
 
   if (state === 1) {
     displayButton();
@@ -34,6 +38,7 @@ function draw() {
     moveThing();
     displayThing();
   }
+
 }
 
 function moveThing() {
@@ -61,7 +66,13 @@ function displayThing() {
 }
 
 function displayButton() {
-  fill(255, 0, 0);
+  if (mouseXInButton && mouseYInButton) {
+    fill(175, 0, 0);
+  }
+  else {
+    fill(255, 0, 0);
+  }
+
   rect(width / 2 - 100, height / 2 - 50, 200, 100);
 
   textSize(24);
@@ -69,12 +80,24 @@ function displayButton() {
   text("Play", width / 2 - 25, height / 2 + 10);
 }
 
-function mouseClicked(){
-  checkButton();
+function mouseClicked() {
+  if (mouseXInButton && mouseYInButton) {
+    state = 2;
+  }
 }
 
-function checkButton() {
-  if (width / 2 - 100 <= mouseX <= width / 2 + 100 && height / 2 - 50 <= mouseY <= height / 2 + 50) {
-    state = 2;
+function checkIfMouseInButton() {
+  if (width / 2 - 100 <= mouseX && width / 2 + 100 >= mouseX) {
+    mouseXInButton = true;
+  }
+  else {
+    mouseXInButton = false;
+  }
+
+  if (height / 2 - 50 < mouseY && mouseY < height / 2 + 50) {
+    mouseYInButton = true;
+  }
+  else {
+    mouseYInButton = false;
   }
 }
