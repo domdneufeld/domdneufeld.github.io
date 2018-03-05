@@ -6,6 +6,7 @@ function setup() {
 }
 
 function draw() {
+  noCursor();
   background(0);
   displayDots();
 }
