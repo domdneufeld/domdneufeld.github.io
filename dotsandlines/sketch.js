@@ -11,13 +11,13 @@ function draw() {
 }
 
 function displayDots() {
-  let pointSpacing = 50;
+  let pointSpacing = 100;
   for (let x = pointSpacing; x < width; x += pointSpacing) {
     for (let y = pointSpacing; y < height; y += pointSpacing) {
       fill(255);
       ellipse(x, y, 4, 4);
       stroke(255, 120);
-      line(x, y, width / 2, height / 2);
+      line(x, y, mouseX, mouseY);
     }
   }
 }
