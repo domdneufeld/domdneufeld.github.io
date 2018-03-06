@@ -5,7 +5,18 @@
 let playerPaddle = {
   width: 10,
   height: 60,
-  x: 20,
+  x: 25,
+  y: 300,
+  dy: 0,
+  up: false,
+  down: false,
+  speed: 4,
+};
+
+let aiPaddle = {
+  width: 10,
+  height: 60,
+  x: 875,
   y: 300,
   dy: 0,
   up: false,
@@ -18,7 +29,7 @@ let ball = {
   y: 300,
   dx: -1,
   dy: -1,
-  xSpeed: 2,
+  xSpeed: 3,
   ySpeed: 3,
   size: 15,
 };
@@ -29,24 +40,53 @@ function setup() {
 
 function draw() {
   background(0);
-  drawTopAndBottomLines();
+  drawBackgroundLines();
 
+  determineAiMovement();
+
+  moveAiPaddle();
   moveBall();
   movePlayerPaddle();
 
 
   displayBall();
   displayPlayerPaddle();
+  displayAiPaddle();
 }
 
 function displayPlayerPaddle() {
   // Draws the player's paddle
   fill(255);
-  rectMode(CORNER);
+  rectMode(CENTER);
   rect(playerPaddle.x, playerPaddle.y, playerPaddle.width, playerPaddle.height);
 }
 
+function displayAiPaddle() {
+  // Draws the ai's paddle
+  fill(255);
+  rectMode(CENTER);
+  rect(aiPaddle.x, aiPaddle.y, aiPaddle.width, aiPaddle.height);
+}
+
 function movePlayerPaddle() {
+  // Moves the paddle up or down if depending on if the keys are pressed
+  if (aiPaddle.up) {
+    aiPaddle.dy = -aiPaddle.speed;
+  }
+  else if (aiPaddle.down) {
+    aiPaddle.dy = aiPaddle.speed;
+  }
+  else {
+    aiPaddle.dy = 0;
+  }
+
+  // Moves the paddle
+  if (aiPaddle.y + aiPaddle.dy > 60 && aiPaddle.y + aiPaddle.dy < 540) {
+    aiPaddle.y += aiPaddle.dy;
+  }
+}
+
+function moveAiPaddle() {
   // Moves the paddle up or down if depending on if the keys are pressed
   if (playerPaddle.up) {
     playerPaddle.dy = -playerPaddle.speed;
@@ -59,10 +99,9 @@ function movePlayerPaddle() {
   }
 
   // Moves the paddle
-  if (playerPaddle.y + playerPaddle.dy > 30 && playerPaddle.y + playerPaddle.dy < 570 - playerPaddle.height) {
+  if (playerPaddle.y + playerPaddle.dy > 60 && playerPaddle.y + playerPaddle.dy < 540) {
     playerPaddle.y += playerPaddle.dy;
   }
-
 }
 
 function keyPressed() {
@@ -87,7 +126,7 @@ function keyReleased() {
   }
 }
 
-function drawTopAndBottomLines() {
+function drawBackgroundLines() {
   // Draws the lines running on the top and bottom
   fill(255);
   rectMode(CORNER);
@@ -101,13 +140,65 @@ function displayBall() {
   rect(ball.x, ball.y, ball.size, ball.size);
 }
 
-function moveBall(){
-  if (ball.y + ball.size / 2 >= 580 || ball.y - ball.size <= 20){
+function moveBall() {
+  // Determines if the ball hits the top or bottom of the screen
+  if (ball.y + ball.size / 2 >= 580 || ball.y - ball.size <= 20) {
     ball.dy = ball.dy * -1;
+  }
+
+  // Determines if the ball hits the player's paddle
+  if (ball.x === playerPaddle.x + playerPaddle.width / 2) {
+    if (ball.y >= playerPaddle.y - playerPaddle.height / 2 && ball.y <= playerPaddle.y + playerPaddle.height / 2) {
+      ball.dx = ball.dx * -1;
+      ball.ySpeed += 0.25;
+    }
+  }
+
+  // Determines if the ball hits the ai's paddle
+  if (ball.x === aiPaddle.x - playerPaddle.width / 2) {
+    if (ball.y >= aiPaddle.y - aiPaddle.height / 2 && ball.y <= aiPaddle.y + aiPaddle.height / 2) {
+      ball.dx = ball.dx * -1;
+      ball.ySpeed += 0.25;
+    }
   }
 
 
   // Moves the ball by the x and y speeds
   ball.x += ball.dx * ball.xSpeed;
   ball.y += ball.dy * ball.ySpeed;
+}
+
+function determineAiMovement() {
+  // Makes the paddle move towards the ball when the ball is coming towards the ai
+  if (ball.dx > 0 && ball.x > 450) {
+    if (ball.y > aiPaddle.y) {
+      aiPaddle.down = true;
+    }
+    else {
+      aiPaddle.down = false;
+    }
+
+    if (ball.y < aiPaddle.y) {
+      aiPaddle.up = true;
+    }
+    else {
+      aiPaddle.up = false;
+    }
+  }
+
+  // Moves the ai paddle to the middle if the ball is moving towards the player
+  else{
+    if (aiPaddle.y > 300){
+      aiPaddle.up = true;
+      aiPaddle.down = false;
+    }
+    else if (aiPaddle.y < 300){
+      aiPaddle.down = true;
+      aiPaddle.up = false;
+    }
+    else{
+      aiPaddle.down = false;
+      aiPaddle.up = false;
+    }
+  }
 }
