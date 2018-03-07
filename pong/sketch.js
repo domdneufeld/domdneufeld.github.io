@@ -2,6 +2,9 @@
 // Domenic Neufeld
 // March 6th, 2018
 
+let playerScore = 0;
+let aiScore = 0;
+
 let playerPaddle = {
   width: 10,
   height: 60,
@@ -35,12 +38,13 @@ let ball = {
 };
 
 function setup() {
-  createCanvas(900, 600);
+  createCanvas(900, 580);
 }
 
 function draw() {
   background(0);
   drawBackgroundLines();
+  displayScore();
 
   determineAiMovement();
 
@@ -81,7 +85,7 @@ function movePlayerPaddle() {
   }
 
   // Moves the paddle
-  if (aiPaddle.y + aiPaddle.dy > 60 && aiPaddle.y + aiPaddle.dy < 540) {
+  if (aiPaddle.y + aiPaddle.dy > 60 && aiPaddle.y + aiPaddle.dy < 520) {
     aiPaddle.y += aiPaddle.dy;
   }
 }
@@ -99,7 +103,7 @@ function moveAiPaddle() {
   }
 
   // Moves the paddle
-  if (playerPaddle.y + playerPaddle.dy > 60 && playerPaddle.y + playerPaddle.dy < 540) {
+  if (playerPaddle.y + playerPaddle.dy > 60 && playerPaddle.y + playerPaddle.dy < 520) {
     playerPaddle.y += playerPaddle.dy;
   }
 }
@@ -131,7 +135,21 @@ function drawBackgroundLines() {
   fill(255);
   rectMode(CORNER);
   rect(20, 10, 860, 10);
-  rect(20, 580, 860, 10);
+  rect(20, 560, 860, 10);
+
+  // Draws the dotted line running through the middle
+  for (let y = 20; y < 580; y += 40) {
+    stroke(255);
+    rect(445, y, 10, 20);
+  }
+}
+
+function displayScore(){
+  textFont("Helvetica");
+  textSize(100);
+  fill(255);
+  text(playerScore,345,110);
+  text(playerScore,500,110);
 }
 
 function displayBall() {
@@ -142,12 +160,12 @@ function displayBall() {
 
 function moveBall() {
   // Determines if the ball hits the top or bottom of the screen
-  if (ball.y + ball.size / 2 >= 580 || ball.y - ball.size <= 20) {
+  if (ball.y + ball.size / 2 >= 560 || ball.y - ball.size <= 20) {
     ball.dy = ball.dy * -1;
   }
 
   // Determines if the ball hits the player's paddle
-  if (ball.x === playerPaddle.x + playerPaddle.width / 2) {
+  if (ball.x - ball.xSpeed <= playerPaddle.x + playerPaddle.width / 2 && ball.x > 20) {
     if (ball.y >= playerPaddle.y - playerPaddle.height / 2 && ball.y <= playerPaddle.y + playerPaddle.height / 2) {
       ball.dx = ball.dx * -1;
       ball.ySpeed += 0.25;
@@ -155,7 +173,7 @@ function moveBall() {
   }
 
   // Determines if the ball hits the ai's paddle
-  if (ball.x === aiPaddle.x - playerPaddle.width / 2) {
+  if (ball.x + ball.xSpeed >= aiPaddle.x - playerPaddle.width / 2 && ball.x < 880) {
     if (ball.y >= aiPaddle.y - aiPaddle.height / 2 && ball.y <= aiPaddle.y + aiPaddle.height / 2) {
       ball.dx = ball.dx * -1;
       ball.ySpeed += 0.25;
@@ -170,7 +188,7 @@ function moveBall() {
 
 function determineAiMovement() {
   // Makes the paddle move towards the ball when the ball is coming towards the ai
-  if (ball.dx > 0 && ball.x > 450) {
+  if (ball.dx > 0 && ball.x > 450 && ball.x < 900) {
     if (ball.y > aiPaddle.y) {
       aiPaddle.down = true;
     }
@@ -187,16 +205,16 @@ function determineAiMovement() {
   }
 
   // Moves the ai paddle to the middle if the ball is moving towards the player
-  else{
-    if (aiPaddle.y > 300){
+  else {
+    if (aiPaddle.y > 300) {
       aiPaddle.up = true;
       aiPaddle.down = false;
     }
-    else if (aiPaddle.y < 300){
+    else if (aiPaddle.y < 300) {
       aiPaddle.down = true;
       aiPaddle.up = false;
     }
-    else{
+    else {
       aiPaddle.down = false;
       aiPaddle.up = false;
     }
