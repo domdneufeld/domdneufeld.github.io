@@ -4,13 +4,14 @@
 
 let playerScore = 0;
 let aiScore = 0;
+let state = 0;
 
 let playerPaddle = {
   width: 10,
   height: 60,
   x: 25,
-  y: 300,
-  dy: 0,
+  y: 290,
+  yDirection: 0,
   up: false,
   down: false,
   speed: 4,
@@ -20,8 +21,8 @@ let aiPaddle = {
   width: 10,
   height: 60,
   x: 875,
-  y: 300,
-  dy: 0,
+  y: 290,
+  yDirection: 0,
   up: false,
   down: false,
   speed: 4,
@@ -29,9 +30,9 @@ let aiPaddle = {
 
 let ball = {
   x: 450,
-  y: 300,
-  dx: -1,
-  dy: -1,
+  y: 290,
+  xDirection: -1,
+  yDirection: -1,
   xSpeed: 3,
   ySpeed: 3,
   size: 15,
@@ -43,19 +44,31 @@ function setup() {
 
 function draw() {
   background(0);
-  drawBackgroundLines();
-  displayScore();
 
-  determineAiMovement();
+  // Pong menu screen
+  if (state === 0) {
+    displayMenu();
 
-  moveAiPaddle();
-  moveBall();
-  movePlayerPaddle();
+    displayStartButton();
+  }
+  // Pong game screen
+  else if (state === 1) {
+    drawBackgroundLines();
+
+    addScore();
+    displayScore();
+
+    determineAiMovement();
+
+    moveAiPaddle();
+    moveBall();
+    movePlayerPaddle();
 
 
-  displayBall();
-  displayPlayerPaddle();
-  displayAiPaddle();
+    displayBall();
+    displayPlayerPaddle();
+    displayAiPaddle();
+  }
 }
 
 function displayPlayerPaddle() {
@@ -75,36 +88,36 @@ function displayAiPaddle() {
 function movePlayerPaddle() {
   // Moves the paddle up or down if depending on if the keys are pressed
   if (aiPaddle.up) {
-    aiPaddle.dy = -aiPaddle.speed;
+    aiPaddle.yDirection = -aiPaddle.speed;
   }
   else if (aiPaddle.down) {
-    aiPaddle.dy = aiPaddle.speed;
+    aiPaddle.yDirection = aiPaddle.speed;
   }
   else {
-    aiPaddle.dy = 0;
+    aiPaddle.yDirection = 0;
   }
 
   // Moves the paddle
-  if (aiPaddle.y + aiPaddle.dy > 60 && aiPaddle.y + aiPaddle.dy < 520) {
-    aiPaddle.y += aiPaddle.dy;
+  if (aiPaddle.y + aiPaddle.yDirection > 60 && aiPaddle.y + aiPaddle.yDirection < 520) {
+    aiPaddle.y += aiPaddle.yDirection;
   }
 }
 
 function moveAiPaddle() {
   // Moves the paddle up or down if depending on if the keys are pressed
   if (playerPaddle.up) {
-    playerPaddle.dy = -playerPaddle.speed;
+    playerPaddle.yDirection = -playerPaddle.speed;
   }
   else if (playerPaddle.down) {
-    playerPaddle.dy = playerPaddle.speed;
+    playerPaddle.yDirection = playerPaddle.speed;
   }
   else {
-    playerPaddle.dy = 0;
+    playerPaddle.yDirection = 0;
   }
 
   // Moves the paddle
-  if (playerPaddle.y + playerPaddle.dy > 60 && playerPaddle.y + playerPaddle.dy < 520) {
-    playerPaddle.y += playerPaddle.dy;
+  if (playerPaddle.y + playerPaddle.yDirection > 60 && playerPaddle.y + playerPaddle.yDirection < 520) {
+    playerPaddle.y += playerPaddle.yDirection;
   }
 }
 
@@ -144,12 +157,12 @@ function drawBackgroundLines() {
   }
 }
 
-function displayScore(){
+function displayScore() {
   textFont("Helvetica");
   textSize(100);
   fill(255);
-  text(playerScore,345,110);
-  text(playerScore,500,110);
+  text(playerScore, 345, 110);
+  text(aiScore, 500, 110);
 }
 
 function displayBall() {
@@ -161,34 +174,40 @@ function displayBall() {
 function moveBall() {
   // Determines if the ball hits the top or bottom of the screen
   if (ball.y + ball.size / 2 >= 560 || ball.y - ball.size <= 20) {
-    ball.dy = ball.dy * -1;
+    ball.yDirection = ball.yDirection * -1;
   }
 
-  // Determines if the ball hits the player's paddle
-  if (ball.x - ball.xSpeed <= playerPaddle.x + playerPaddle.width / 2 && ball.x > 20) {
+  // Determines if the ball is going to reach the same x-value as the player paddle's x-value
+  if (ball.x - ball.xSpeed <= playerPaddle.x + playerPaddle.width / 2 && ball.x >= playerPaddle.x) {
+    // Determines if the ball is hitting within the the paddle and not above or below the paddle
     if (ball.y >= playerPaddle.y - playerPaddle.height / 2 && ball.y <= playerPaddle.y + playerPaddle.height / 2) {
-      ball.dx = ball.dx * -1;
-      ball.ySpeed += 0.25;
+      ball.xDirection = ball.xDirection * -1;
+      // Adds a random increment of speed to the ball after each hit
+      ball.ySpeed += random(0, 0.5);
+      ball.xSpeed += random(0, 0.5);
     }
   }
 
   // Determines if the ball hits the ai's paddle
-  if (ball.x + ball.xSpeed >= aiPaddle.x - playerPaddle.width / 2 && ball.x < 880) {
+  if (ball.x + ball.xSpeed >= aiPaddle.x - playerPaddle.width / 2 && ball.x <= aiPaddle.x) {
+    // Determines if the ball is hitting within the the paddle and not above or below the paddle
     if (ball.y >= aiPaddle.y - aiPaddle.height / 2 && ball.y <= aiPaddle.y + aiPaddle.height / 2) {
-      ball.dx = ball.dx * -1;
-      ball.ySpeed += 0.25;
+      ball.xDirection = ball.xDirection * -1;
+      // Adds a random increment of speed to the ball after each hit
+      ball.ySpeed += random(0, 0.5);
+      ball.xSpeed += random(0, 0.5);
     }
   }
 
 
   // Moves the ball by the x and y speeds
-  ball.x += ball.dx * ball.xSpeed;
-  ball.y += ball.dy * ball.ySpeed;
+  ball.x += ball.xDirection * ball.xSpeed;
+  ball.y += ball.yDirection * ball.ySpeed;
 }
 
 function determineAiMovement() {
   // Makes the paddle move towards the ball when the ball is coming towards the ai
-  if (ball.dx > 0 && ball.x > 450 && ball.x < 900) {
+  if (ball.xDirection > 0 && ball.x > 450 && ball.x < 900) {
     if (ball.y > aiPaddle.y) {
       aiPaddle.down = true;
     }
@@ -206,11 +225,11 @@ function determineAiMovement() {
 
   // Moves the ai paddle to the middle if the ball is moving towards the player
   else {
-    if (aiPaddle.y > 300) {
+    if (aiPaddle.y > 290) {
       aiPaddle.up = true;
       aiPaddle.down = false;
     }
-    else if (aiPaddle.y < 300) {
+    else if (aiPaddle.y < 290) {
       aiPaddle.down = true;
       aiPaddle.up = false;
     }
@@ -219,4 +238,48 @@ function determineAiMovement() {
       aiPaddle.up = false;
     }
   }
+}
+
+function addScore() {
+  if (ball.x <= 0) {
+    aiScore += 1;
+    ball.x = 450;
+    ball.y = 290;
+    ball.ySpeed = 3;
+    ball.xSpeed = 3;
+    playerPaddle.y = 290;
+    aiPaddle.y = 290;
+  }
+
+  if (ball.x >= 900) {
+    playerScore += 1;
+    ball.x = 450;
+    ball.y = 290;
+    ball.ySpeed = 3;
+    ball.xSpeed = 3;
+    playerPaddle.y = 290;
+    aiPaddle.y = 290;
+  }
+}
+
+function displayMenu() {
+  // Writes "PONG" in a large white font when the game loads
+  fill(255);
+  textFont("Helvetica");
+  textSize(100);
+  text("PONG", 300, 100, 600, 200);
+}
+
+function displayStartButton() {
+  stroke(255);
+  fill(50);
+  rect(350, 300, 200, 100);
+
+  fill(255);
+  textSize(48);
+  text("PLAY",390, 322.5, 550, 400);
+}
+
+function checkIfMouseIsOverButton(){
+  
 }
