@@ -6,6 +6,8 @@ let playerScore = 0;
 let aiScore = 0;
 let state = 0;
 
+let mouseOverButton;
+
 let playerPaddle = {
   width: 10,
   height: 60,
@@ -49,6 +51,7 @@ function draw() {
   if (state === 0) {
     displayMenu();
 
+    checkIfMouseIsOverButton();
     displayStartButton();
   }
   // Pong game screen
@@ -178,7 +181,7 @@ function moveBall() {
   }
 
   // Determines if the ball is going to reach the same x-value as the player paddle's x-value
-  if (ball.x - ball.xSpeed <= playerPaddle.x + playerPaddle.width / 2 && ball.x >= playerPaddle.x) {
+  if (ball.x - ball.size / 2 - ball.xSpeed <= playerPaddle.x + playerPaddle.width / 2 && ball.x >= playerPaddle.x && ball.xDirection < 0) {
     // Determines if the ball is hitting within the the paddle and not above or below the paddle
     if (ball.y >= playerPaddle.y - playerPaddle.height / 2 && ball.y <= playerPaddle.y + playerPaddle.height / 2) {
       ball.xDirection = ball.xDirection * -1;
@@ -189,7 +192,7 @@ function moveBall() {
   }
 
   // Determines if the ball hits the ai's paddle
-  if (ball.x + ball.xSpeed >= aiPaddle.x - playerPaddle.width / 2 && ball.x <= aiPaddle.x) {
+  if (ball.x + ball.xSpeed >= aiPaddle.x - playerPaddle.width / 2 && ball.x <= aiPaddle.x && ball.xDirection > 0) {
     // Determines if the ball is hitting within the the paddle and not above or below the paddle
     if (ball.y >= aiPaddle.y - aiPaddle.height / 2 && ball.y <= aiPaddle.y + aiPaddle.height / 2) {
       ball.xDirection = ball.xDirection * -1;
@@ -206,8 +209,38 @@ function moveBall() {
 }
 
 function determineAiMovement() {
+  if (ball.xDirection > 0 && ball.x > 450 && ball.x < 900 && 450 / ball.xSpeed * ball.ySpeed * ball.yDirection + ball.y < 0 && ball.x < 700){
+    if (aiPaddle.y > 150) {
+      aiPaddle.up = true;
+      aiPaddle.down = false;
+    }
+    else if (aiPaddle.y < 150) {
+      aiPaddle.down = true;
+      aiPaddle.up = false;
+    }
+    else {
+      aiPaddle.down = false;
+      aiPaddle.up = false;
+    }
+  }
+
+  else if (ball.xDirection > 0 && ball.x > 450 && ball.x < 900 && 450 / ball.xSpeed * ball.ySpeed * ball.yDirection + ball.y > 580 && ball.x < 700){
+    if (aiPaddle.y > 440) {
+      aiPaddle.up = true;
+      aiPaddle.down = false;
+    }
+    else if (aiPaddle.y < 440) {
+      aiPaddle.down = true;
+      aiPaddle.up = false;
+    }
+    else {
+      aiPaddle.down = false;
+      aiPaddle.up = false;
+    }
+  }
+
   // Makes the paddle move towards the ball when the ball is coming towards the ai
-  if (ball.xDirection > 0 && ball.x > 450 && ball.x < 900) {
+  else if (ball.xDirection > 0 && ball.x > 450 && ball.x < 900) {
     if (ball.y > aiPaddle.y) {
       aiPaddle.down = true;
     }
@@ -271,15 +304,37 @@ function displayMenu() {
 }
 
 function displayStartButton() {
-  stroke(255);
-  fill(50);
-  rect(350, 300, 200, 100);
+  if (mouseOverButton) {
+    stroke(255);
+    fill(200);
+    rect(350, 300, 200, 100);
 
-  fill(255);
-  textSize(48);
-  text("PLAY",390, 322.5, 550, 400);
+    fill(0);
+    textSize(48);
+    text("PLAY", 390, 322.5, 550, 400);
+  }
+  else {
+    stroke(255);
+    fill(50);
+    rect(350, 300, 200, 100);
+
+    fill(255);
+    textSize(48);
+    text("PLAY", 390, 322.5, 550, 400);
+  }
 }
 
-function checkIfMouseIsOverButton(){
-  
+function checkIfMouseIsOverButton() {
+  if (mouseX <= 550 && mouseX >= 350 && mouseY >= 300 && mouseY <= 400) {
+    mouseOverButton = true;
+  }
+  else {
+    mouseOverButton = false;
+  }
+}
+
+function mouseClicked() {
+  if (mouseOverButton) {
+    state = 1;
+  }
 }
