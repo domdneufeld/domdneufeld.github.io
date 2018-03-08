@@ -209,31 +209,40 @@ function moveBall() {
 }
 
 function determineAiMovement() {
-  if (ball.xDirection > 0 && ball.x > 450 && ball.x < 900 && 450 / ball.xSpeed * ball.ySpeed * ball.yDirection + ball.y < 0 && ball.x < 700){
-    if (aiPaddle.y > 150) {
+  // Checks to see if the ball is going to bounce off the top before reaching the paddle
+  if (ball.xDirection > 0 && ball.x > 450 && ball.x < 900 && 450 / ball.xSpeed * ball.ySpeed * ball.yDirection + ball.y < 0 && ball.x < 700) {
+    // Sets the ai paddle's height to 180 until the ball gets close to the paddle
+    if (aiPaddle.y > 180) {
+      // Moves up
       aiPaddle.up = true;
       aiPaddle.down = false;
     }
-    else if (aiPaddle.y < 150) {
+    else if (aiPaddle.y < 180) {
+      // Moves down
       aiPaddle.down = true;
       aiPaddle.up = false;
     }
     else {
+      // No movement
       aiPaddle.down = false;
       aiPaddle.up = false;
     }
   }
-
-  else if (ball.xDirection > 0 && ball.x > 450 && ball.x < 900 && 450 / ball.xSpeed * ball.ySpeed * ball.yDirection + ball.y > 580 && ball.x < 700){
-    if (aiPaddle.y > 440) {
+  // Checks to see if the ball is going to bounce off the bottom before reaching the paddle
+  else if (ball.xDirection > 0 && ball.x > 450 && ball.x < 900 && 450 / ball.xSpeed * ball.ySpeed + ball.y > 550 && ball.x < 700) {
+    // Sets the ai paddle's height to 420 until the ball gets close to the paddle
+    if (aiPaddle.y > 420) {
+      // Moves up
       aiPaddle.up = true;
       aiPaddle.down = false;
     }
-    else if (aiPaddle.y < 440) {
+    else if (aiPaddle.y < 420) {
+      // Moves down
       aiPaddle.down = true;
       aiPaddle.up = false;
     }
     else {
+      // No movement
       aiPaddle.down = false;
       aiPaddle.up = false;
     }
@@ -276,6 +285,7 @@ function determineAiMovement() {
 function addScore() {
   if (ball.x <= 0) {
     aiScore += 1;
+    // Resets the ball and paddles after adding the score
     ball.x = 450;
     ball.y = 290;
     ball.ySpeed = 3;
@@ -286,6 +296,7 @@ function addScore() {
 
   if (ball.x >= 900) {
     playerScore += 1;
+    // Resets the ball and paddle after adding the score
     ball.x = 450;
     ball.y = 290;
     ball.ySpeed = 3;
@@ -305,6 +316,7 @@ function displayMenu() {
 
 function displayStartButton() {
   if (mouseOverButton) {
+    // Makes button a lighter color if the mouse is over the button
     stroke(255);
     fill(200);
     rect(350, 300, 200, 100);
@@ -314,6 +326,7 @@ function displayStartButton() {
     text("PLAY", 390, 322.5, 550, 400);
   }
   else {
+    // Returns the button to its default color when the mouse is not over the button
     stroke(255);
     fill(50);
     rect(350, 300, 200, 100);
@@ -335,6 +348,22 @@ function checkIfMouseIsOverButton() {
 
 function mouseClicked() {
   if (mouseOverButton) {
+    // changes from the menu screen to the game screen when the play button is pressed
     state = 1;
+  }
+}
+
+function endGame() {
+  if (playerScore === 10) {
+    // changes from game screen to win screen and resets scores
+    state === 3;
+    aiScore = 0;
+    playerScore = 0;
+  }
+  if (aiScore === 10){
+    // changes from game screen to loss screen and resets scores
+    state === 4;
+    aiScore = 0;
+    playerScore = 0;
   }
 }
