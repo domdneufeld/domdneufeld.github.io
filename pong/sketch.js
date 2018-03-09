@@ -60,6 +60,7 @@ function draw() {
 
     addScore();
     displayScore();
+    endGame();
 
     determineAiMovement();
 
@@ -71,6 +72,14 @@ function draw() {
     displayBall();
     displayPlayerPaddle();
     displayAiPaddle();
+  }
+
+  else if (state === 2){
+    displayWin();
+  }
+
+  else{
+    displayLoss();
   }
 }
 
@@ -211,13 +220,13 @@ function moveBall() {
 function determineAiMovement() {
   // Checks to see if the ball is going to bounce off the top before reaching the paddle
   if (ball.xDirection > 0 && ball.x > 450 && ball.x < 900 && 450 / ball.xSpeed * ball.ySpeed * ball.yDirection + ball.y < 0 && ball.x < 700) {
-    // Sets the ai paddle's height to 180 until the ball gets close to the paddle
-    if (aiPaddle.y > 180) {
+    // Sets the ai paddle's height to 170 until the ball gets close to the paddle
+    if (aiPaddle.y > 170) {
       // Moves up
       aiPaddle.up = true;
       aiPaddle.down = false;
     }
-    else if (aiPaddle.y < 180) {
+    else if (aiPaddle.y < 170) {
       // Moves down
       aiPaddle.down = true;
       aiPaddle.up = false;
@@ -230,13 +239,13 @@ function determineAiMovement() {
   }
   // Checks to see if the ball is going to bounce off the bottom before reaching the paddle
   else if (ball.xDirection > 0 && ball.x > 450 && ball.x < 900 && 450 / ball.xSpeed * ball.ySpeed + ball.y > 550 && ball.x < 700) {
-    // Sets the ai paddle's height to 420 until the ball gets close to the paddle
-    if (aiPaddle.y > 420) {
+    // Sets the ai paddle's height to 410 until the ball gets close to the paddle
+    if (aiPaddle.y > 410) {
       // Moves up
       aiPaddle.up = true;
       aiPaddle.down = false;
     }
-    else if (aiPaddle.y < 420) {
+    else if (aiPaddle.y < 410) {
       // Moves down
       aiPaddle.down = true;
       aiPaddle.up = false;
@@ -356,14 +365,30 @@ function mouseClicked() {
 function endGame() {
   if (playerScore === 10) {
     // changes from game screen to win screen and resets scores
-    state === 3;
+    state = 2;
     aiScore = 0;
     playerScore = 0;
   }
   if (aiScore === 10){
     // changes from game screen to loss screen and resets scores
-    state === 4;
+    state = 3;
     aiScore = 0;
     playerScore = 0;
   }
+}
+
+function displayWin(){
+  // Writes you win if you win
+  fill(255);
+  textFont("Helvetica");
+  textSize(80);
+  text("You Win", 300, 100, 600, 200);
+
+}
+
+function displayLoss(){
+  fill(255);
+  textFont("Helvetica");
+  textSize(70);
+  text("You Lose", 300, 100, 600, 200);
 }
