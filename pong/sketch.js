@@ -76,10 +76,14 @@ function draw() {
 
   else if (state === 2){
     displayWin();
+    checkIfMouseIsOverButton();
+    displayStartButton();
   }
 
   else{
     displayLoss();
+    checkIfMouseIsOverButton();
+    displayStartButton();
   }
 }
 
@@ -192,22 +196,22 @@ function moveBall() {
   // Determines if the ball is going to reach the same x-value as the player paddle's x-value
   if (ball.x - ball.size / 2 - ball.xSpeed <= playerPaddle.x + playerPaddle.width / 2 && ball.x >= playerPaddle.x && ball.xDirection < 0) {
     // Determines if the ball is hitting within the the paddle and not above or below the paddle
-    if (ball.y >= playerPaddle.y - playerPaddle.height / 2 && ball.y <= playerPaddle.y + playerPaddle.height / 2) {
+    if (ball.y + ball.size / 2>= playerPaddle.y - playerPaddle.height / 2 && ball.y - ball.size / 2 <= playerPaddle.y + playerPaddle.height / 2) {
       ball.xDirection = ball.xDirection * -1;
       // Adds a random increment of speed to the ball after each hit
-      ball.ySpeed += random(0, 0.5);
-      ball.xSpeed += random(0, 0.5);
+      ball.ySpeed += random(0.25, 0.75);
+      ball.xSpeed += random(0.25, 0.75);
     }
   }
 
   // Determines if the ball hits the ai's paddle
   if (ball.x + ball.xSpeed >= aiPaddle.x - playerPaddle.width / 2 && ball.x <= aiPaddle.x && ball.xDirection > 0) {
     // Determines if the ball is hitting within the the paddle and not above or below the paddle
-    if (ball.y >= aiPaddle.y - aiPaddle.height / 2 && ball.y <= aiPaddle.y + aiPaddle.height / 2) {
+    if (ball.y + ball.size / 2 >= aiPaddle.y - aiPaddle.height / 2 && ball.y - ball.size / 2 <= aiPaddle.y + aiPaddle.height / 2) {
       ball.xDirection = ball.xDirection * -1;
       // Adds a random increment of speed to the ball after each hit
-      ball.ySpeed += random(0, 0.5);
-      ball.xSpeed += random(0, 0.5);
+      ball.ySpeed += random(0.25, 0.75);
+      ball.xSpeed += random(0.25, 0.75);
     }
   }
 
@@ -324,25 +328,50 @@ function displayMenu() {
 }
 
 function displayStartButton() {
-  if (mouseOverButton) {
-    // Makes button a lighter color if the mouse is over the button
-    stroke(255);
-    fill(200);
-    rect(350, 300, 200, 100);
+  rectMode(CORNER);
+  if (state === 0){
+    if (mouseOverButton) {
+      // Makes button a lighter color if the mouse is over the button
+      stroke(255);
+      fill(200);
+      rect(350, 300, 200, 100);
 
-    fill(0);
-    textSize(48);
-    text("PLAY", 390, 322.5, 550, 400);
+      fill(0);
+      textSize(48);
+      text("PLAY", 390, 322.5, 550, 400);
+    }
+    else {
+      // Returns the button to its default color when the mouse is not over the button
+      stroke(255);
+      fill(50);
+      rect(350, 300, 200, 100);
+
+      fill(255);
+      textSize(48);
+      text("PLAY", 390, 322.5, 550, 400);
+    }
   }
-  else {
-    // Returns the button to its default color when the mouse is not over the button
-    stroke(255);
-    fill(50);
-    rect(350, 300, 200, 100);
+  else{
+    if (mouseOverButton) {
+      // Makes button a lighter color if the mouse is over the button
+      stroke(255);
+      fill(200);
+      rect(350, 300, 200, 100);
 
-    fill(255);
-    textSize(48);
-    text("PLAY", 390, 322.5, 550, 400);
+      fill(0);
+      textSize(48);
+      text("PLAY", 390, 322.5, 550, 400);
+    }
+    else {
+      // Returns the button to its default color when the mouse is not over the button
+      stroke(255);
+      fill(50);
+      rect(350, 300, 200, 100);
+
+      fill(255);
+      textSize(48);
+      text("PLAY", 390, 322.5, 550, 400);
+    }
   }
 }
 
@@ -363,13 +392,13 @@ function mouseClicked() {
 }
 
 function endGame() {
-  if (playerScore === 10) {
+  if (playerScore === 5) {
     // changes from game screen to win screen and resets scores
     state = 2;
     aiScore = 0;
     playerScore = 0;
   }
-  if (aiScore === 10){
+  if (aiScore === 5){
     // changes from game screen to loss screen and resets scores
     state = 3;
     aiScore = 0;
@@ -382,13 +411,14 @@ function displayWin(){
   fill(255);
   textFont("Helvetica");
   textSize(80);
-  text("You Win", 300, 100, 600, 200);
+  text("You Win", 300, 200);
 
 }
 
 function displayLoss(){
+  // Writes you lose if you Lose
   fill(255);
   textFont("Helvetica");
-  textSize(70);
-  text("You Lose", 300, 100, 600, 200);
+  textSize(75);
+  text("You Lose", 300, 200);
 }
