@@ -35,7 +35,7 @@ let aiPaddle = {
 let ball = {
   x: 450,
   y: 290,
-  xDirection: 1,
+  xDirection: -1,
   yDirection: -1,
   xSpeed: 3,
   ySpeed: 3,
@@ -74,7 +74,6 @@ function draw() {
     displayBall();
     displayPlayerPaddle();
     displayAiPaddle();
-    console.log(reflectionYPosition);
   }
 
   else if (state === 2){
@@ -225,20 +224,15 @@ function moveBall() {
 }
 
 function determineAiMovement() {
-  if (ball.x <= 455 && ball.x >= 445){
-    reflectionYPosition = 450 / ball.xSpeed * ball.ySpeed * ball.yDirection + ball.y;
-  }
   // Checks to see if the ball is going to bounce off the top before reaching the paddle
-  if (ball.xDirection > 0 && ball.x > 450 && ball.x < 900 && 450 / ball.xSpeed * ball.ySpeed * ball.yDirection + ball.y < 0) {
-    // Calculates reflection
-
+  if (ball.xDirection > 0 && ball.x > 450 && ball.x < 900 && 450 / ball.xSpeed * ball.ySpeed * ball.yDirection + ball.y < 0 && ball.x < 700) {
     // Sets the ai paddle's height to 170 until the ball gets close to the paddle
-    if (aiPaddle.y > -reflectionYPosition - reflectionYPosition % 4) {
+    if (aiPaddle.y > 170) {
       // Moves up
       aiPaddle.up = true;
       aiPaddle.down = false;
     }
-    else if (aiPaddle.y < -reflectionYPosition - reflectionYPosition % 4) {
+    else if (aiPaddle.y < 170) {
       // Moves down
       aiPaddle.down = true;
       aiPaddle.up = false;

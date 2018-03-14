@@ -32,8 +32,7 @@ module.exports = {
     "globals": {
       //allow direct access to the DOM without errors
       "document": true,
-      "window": true,
-      "console": true,
+      "window": true,  
       //p5js globals
       "remove": true,
       "canvas": true,
