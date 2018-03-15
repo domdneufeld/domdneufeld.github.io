@@ -1,6 +1,14 @@
 // Pong
 // Domenic Neufeld
-// March 6th, 2018
+// March 15th, 2018
+
+// Uses a state variable with 4 states for: the menu screen, the game screen, the win screen and the lose screen.
+
+// Extra for experts:
+// I made an ai player that you will play against. The ai calculates where the ball will be at the time that the ball hits the
+// paddle, and if the paddle is below that or above that it will move towards that position. The ai will move to the center
+// after hitting the ball and will only start moving once the ball reaches the halfway point. The ai plays the game perfectly,
+// and the only thing that gives the player a chance is 
 
 let playerScore = 0;
 let aiScore = 0;
@@ -8,7 +16,7 @@ let state = 0;
 
 let mouseOverButton;
 
-let reflectionYPosition;
+let finalYPosition;
 
 let playerPaddle = {
   width: 10,
@@ -36,7 +44,7 @@ let ball = {
   x: 450,
   y: 290,
   xDirection: 1,
-  yDirection: -1,
+  yDirection: 1,
   xSpeed: 3,
   ySpeed: 3,
   size: 15,
@@ -74,7 +82,7 @@ function draw() {
     displayBall();
     displayPlayerPaddle();
     displayAiPaddle();
-    console.log(reflectionYPosition);
+    console.log(finalYPosition);
   }
 
   else if (state === 2){
@@ -225,20 +233,20 @@ function moveBall() {
 }
 
 function determineAiMovement() {
-  if (ball.x <= 455 && ball.x >= 445){
-    reflectionYPosition = 450 / ball.xSpeed * ball.ySpeed * ball.yDirection + ball.y;
+  if (ball.x <= 450){
+    // Calculates what the y position of the ball will when the x position of the ball = 0 and if it didn't reflect off of any walls
+    finalYPosition = 450 / ball.xSpeed * ball.ySpeed * ball.yDirection + ball.y;
   }
   // Checks to see if the ball is going to bounce off the top before reaching the paddle
-  if (ball.xDirection > 0 && ball.x > 450 && ball.x < 900 && 450 / ball.xSpeed * ball.ySpeed * ball.yDirection + ball.y < 0) {
-    // Calculates reflection
+  if (ball.xDirection > 0 && ball.x > 450 && ball.x < 900 && finalYPosition < 0) {
 
-    // Sets the ai paddle's height to 170 until the ball gets close to the paddle
-    if (aiPaddle.y > -reflectionYPosition - reflectionYPosition % 4) {
+    // Calculates and sets the ai paddle's height to the location of the reflection
+    if (aiPaddle.y > -finalYPosition + 20 + (290 + finalYPosition) % aiPaddle.speed) {
       // Moves up
       aiPaddle.up = true;
       aiPaddle.down = false;
     }
-    else if (aiPaddle.y < -reflectionYPosition - reflectionYPosition % 4) {
+    else if (aiPaddle.y < -finalYPosition + 20 + (290 + finalYPosition) % aiPaddle.speed) {
       // Moves down
       aiPaddle.down = true;
       aiPaddle.up = false;
@@ -250,14 +258,14 @@ function determineAiMovement() {
     }
   }
   // Checks to see if the ball is going to bounce off the bottom before reaching the paddle
-  else if (ball.xDirection > 0 && ball.x > 450 && ball.x < 900 && 450 / ball.xSpeed * ball.ySpeed + ball.y > 550 && ball.x < 700) {
+  else if (ball.xDirection > 0 && ball.x > 450 && ball.x < 900 && finalYPosition > 580) {
     // Sets the ai paddle's height to 410 until the ball gets close to the paddle
-    if (aiPaddle.y > 410) {
+    if (aiPaddle.y > 560 - (finalYPosition - 580) + (finalYPosition - 290) % aiPaddle.speed) {
       // Moves up
       aiPaddle.up = true;
       aiPaddle.down = false;
     }
-    else if (aiPaddle.y < 410) {
+    else if (aiPaddle.y < 560 - (finalYPosition - 580) + (finalYPosition - 290) % aiPaddle.speed) {
       // Moves down
       aiPaddle.down = true;
       aiPaddle.up = false;
@@ -270,15 +278,15 @@ function determineAiMovement() {
   }
 
   // Makes the paddle move towards the ball when the ball is coming towards the ai
-  else if (ball.xDirection > 0 && ball.x > 450 && ball.x < 900) {
-    if (ball.y > aiPaddle.y) {
+  else if (ball.xDirection > 0 && ball.x > 450) {
+    if (aiPaddle.y < finalYPosition + (finalYPosition + 290) % aiPaddle.speed) {
       aiPaddle.down = true;
     }
     else {
       aiPaddle.down = false;
     }
 
-    if (ball.y < aiPaddle.y) {
+    if (aiPaddle.y > finalYPosition + (finalYPosition + 290) % aiPaddle.speed) {
       aiPaddle.up = true;
     }
     else {
