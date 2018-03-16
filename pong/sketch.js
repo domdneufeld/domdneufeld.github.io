@@ -8,7 +8,7 @@
 // I made an ai player that you will play against. The ai calculates where the ball will be at the time that the ball hits the
 // paddle, and if the paddle is below that or above that it will move towards that position. The ai will move to the center
 // after hitting the ball and will only start moving once the ball reaches the halfway point. The ai plays the game perfectly,
-// and the only thing that gives the player a chance is 
+// and the only thing that gives the player a chance is the fact that the ai waits until the midway point to start moving.
 
 let playerScore = 0;
 let aiScore = 0;
@@ -82,15 +82,16 @@ function draw() {
     displayBall();
     displayPlayerPaddle();
     displayAiPaddle();
-    console.log(finalYPosition);
   }
 
+  // Win screen
   else if (state === 2){
     displayWin();
     checkIfMouseIsOverButton();
     displayStartButton();
   }
 
+  // Loss screen
   else{
     displayLoss();
     checkIfMouseIsOverButton();
@@ -112,7 +113,7 @@ function displayAiPaddle() {
   rect(aiPaddle.x, aiPaddle.y, aiPaddle.width, aiPaddle.height);
 }
 
-function movePlayerPaddle() {
+function moveAiPaddle() {
   // Moves the paddle up or down if depending on if the keys are pressed
   if (aiPaddle.up) {
     aiPaddle.yDirection = -aiPaddle.speed;
@@ -130,7 +131,7 @@ function movePlayerPaddle() {
   }
 }
 
-function moveAiPaddle() {
+function movePlayerPaddle() {
   // Moves the paddle up or down if depending on if the keys are pressed
   if (playerPaddle.up) {
     playerPaddle.yDirection = -playerPaddle.speed;
@@ -210,8 +211,8 @@ function moveBall() {
     if (ball.y + ball.size / 2>= playerPaddle.y - playerPaddle.height / 2 && ball.y - ball.size / 2 <= playerPaddle.y + playerPaddle.height / 2) {
       ball.xDirection = ball.xDirection * -1;
       // Adds a random increment of speed to the ball after each hit
-      ball.ySpeed += random(0.25, 0.75);
-      ball.xSpeed += random(0.25, 0.75);
+      ball.ySpeed += random(0.25, 0.85);
+      ball.xSpeed += random(0.25, 0.85);
     }
   }
 
@@ -221,8 +222,8 @@ function moveBall() {
     if (ball.y + ball.size / 2 >= aiPaddle.y - aiPaddle.height / 2 && ball.y - ball.size / 2 <= aiPaddle.y + aiPaddle.height / 2) {
       ball.xDirection = ball.xDirection * -1;
       // Adds a random increment of speed to the ball after each hit
-      ball.ySpeed += random(0.25, 0.75);
-      ball.xSpeed += random(0.25, 0.75);
+      ball.ySpeed += random(0.25, 0.85);
+      ball.xSpeed += random(0.25, 0.85);
     }
   }
 
@@ -341,6 +342,9 @@ function displayMenu() {
   textFont("Helvetica");
   textSize(100);
   text("PONG", 300, 100, 600, 200);
+
+  textSize(32);
+  text("Use the arrow keys to move", 250, 550);
 }
 
 function displayStartButton() {
