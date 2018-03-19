@@ -4,6 +4,8 @@
 
 // Uses a state variable with 4 states for: the menu screen, the game screen, the win screen and the lose screen.
 
+// I split the game into separate folders to improve the readability, but it seemed to mess up the linter.
+
 // Extra for experts:
 // I made an ai player that you will play against. The ai calculates where the ball will be at the time that the ball hits the
 // paddle, and if the paddle is below that or above that it will move towards that position. The ai will move to the center
