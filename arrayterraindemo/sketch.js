@@ -1,5 +1,7 @@
 let heights = [];
 let numberOfRectangles;
+let maxHeight;
+let x;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -13,8 +15,20 @@ function draw() {
 }
 
 function generateInitialTerrain(numberOfRectangles) {
+  let time = 0;
+  let dt = 0.002;
+  maxHeight = 0;
+
+
   for (let i = 0; i < numberOfRectangles; i++) {
-    heights.push(random(100, 500));
+    let currentHeight = noise(time)*750;
+    heights.push(currentHeight);
+    time += dt;
+
+    if (currentHeight > maxHeight){
+      maxHeight = currentHeight;
+      x = i;
+    }
   }
 }
 
@@ -22,8 +36,10 @@ function displayTerrain() {
   let rectWidth = width / numberOfRectangles;
   rectMode(CORNERS);
 
-  for(let i = 0; i < numberOfRectangles; i++){
-    stroke(random(255),random(255),random(255));
-    rect(i * rectWidth, height, (i+1) * rectWidth, height - heights[i]);
+  for (let i = 0; i < numberOfRectangles; i++) {
+    stroke(0);
+    rect(i * rectWidth, height, (i + 1) * rectWidth, height - heights[i]);
   }
+  fill(255,0,0);
+  ellipse(x,height - maxHeight,10);
 }
