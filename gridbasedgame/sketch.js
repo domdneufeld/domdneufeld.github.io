@@ -1,10 +1,14 @@
 let boxSize;
-let grid;
+let grid; //0 = blank; 1 = red; 2 = yellow;
 let boardWidth = 7;
 let boardHeight = 6;
 
 let redTurn = true;
-let yellowTurn = false;
+
+let yellowWin = false;
+let redWin = false;
+
+let horizontal, vertical, diagonalPos, diagonalNeg;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -15,6 +19,7 @@ function setup() {
 function draw() {
   background(255);
   drawGrid();
+  checkForWin();
 }
 
 function drawGrid() {
@@ -32,6 +37,7 @@ function drawGrid() {
         fill(255, 255, 0);
       }
       ellipse(boxSize * j + boxSize / 2, boxSize * i + boxSize / 2, boxSize);
+      checkForWin(i,j);
     }
   }
 }
@@ -49,12 +55,20 @@ function createEmpty2dArray() {
 
 function mousePressed() {
   let xcoord = floor(mouseX / boxSize);
-  redTurn = !redTurn;
-
   for (let i = 6; i > 0; i--) {
     if (grid[i - 1][xcoord] === 0) {
-      grid[i - 1][xcoord] = 1;
+      if (redTurn) {
+        grid[i - 1][xcoord] = 1;
+      }
+      else {
+        grid[i - 1][xcoord] = 2;
+      }
+      redTurn = !redTurn;
       return grid;
     }
   }
+}
+
+function checkForWin(x,y) {
+
 }
