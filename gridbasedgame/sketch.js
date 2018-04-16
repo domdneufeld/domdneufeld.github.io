@@ -43,10 +43,10 @@ function drawGrid() {
 
 function createEmpty2dArray() {
   let emptyGrid = [];
-  for (let x = 0; x < boardHeight; x++) {
+  for (let y = 0; y < boardHeight; y++) {
     emptyGrid.push([]);
-    for (let y = 0; y < boardWidth; y++) {
-      emptyGrid[x].push(0);
+    for (let x = 0; x < boardWidth; x++) {
+      emptyGrid[y].push(0);
     }
   }
   return emptyGrid;
@@ -153,10 +153,10 @@ function diagonalPosWin(){
   let currentDPValue = 0;
   dpTally = 1;
   for (let i = boardHeight; i > 0; i--) {
-    for (let j = boardWidth; j > 0; j--) {
+    for (let j = 0; j < boardWidth; j++) {
       previousDPValue = 0;
       for (let x = 0; x < 4; x++) {
-        if (i + x < boardHeight && j + x < boardWidth){
+        if (i + x < boardHeight && j - x < boardWidth){
           currentDPValue = grid[i + x][j - x];
         }
         else{
