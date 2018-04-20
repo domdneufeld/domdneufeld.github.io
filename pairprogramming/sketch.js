@@ -26,6 +26,7 @@ class Paddle {
     this.width = width / 8;
     this.segments = [0,1,2,3,4,5,];
     this.height = width / 32;
+    this.segmentx = [0,1,2,3,4,5,];
 
     // Movement variables
     this.speed = 5;
@@ -37,22 +38,24 @@ class Paddle {
   display() {
     fill(255);
     rectMode(CENTER);
-    for (let i = 0; i < this.segments.length)
-    // rect(this.x, this.y, this.width, this.height);
+    // Constantly checks where each segment of the paddle is
+    for (let i = 0; i < this.segments.length; i++){
+      this.segmentx[i] = this.x - this.width / 2 + this.width / 6 * (i + 0.5);
+    }
+    // Draws the paddle
+    rect(this.x, this.y, this.width, this.height);
   }
-
-
 
   move() {
     if (this.left && this.right) {
       this.direction = 0;
     }
     // Checks if the left arrow key is down and if the paddle is going to collide with the edge
-    else if (this.left && this.x - this.width / 2 - this.speed >= 0) {
+    else if (this.left && this.x - this.width / 2 - this.speed > 0) {
       this.direction = -1;
     }
     // Checks if the right arrow key is down and if the paddle is going to collide with the edge
-    else if (this.right && this.x + this.width / 2 + this.speed <= width) {
+    else if (this.right && this.x + this.width / 2 + this.speed < width) {
       this.direction = 1;
     }
     else {
@@ -82,6 +85,7 @@ class Ball {
 
   display(){
     fill(255);
+    noStroke();
     ellipseMode(CENTER);
     ellipse(this.x,this.y,this.radius,this.radius);
   }
@@ -97,11 +101,63 @@ class Ball {
       this.yDirection = -this.yDirection;
     }
 
-    // Checks to see if the paddle is about to hit the paddle
-    if (this.y + this.radius + this.ySpeed >= myPaddle.y && this.x < myPaddle.x + myPaddle.width / 2 && this.x > myPaddle.x - myPaddle.width / 2){
-      // Checks to see if ball is currently touching the paddle, and makes sure it isn't hitting on the way up
+    // Checks to see if the paddle is about to hit the left most segment of the paddle
+    if (this.y + this.radius + this.ySpeed >= myPaddle.y && this.x < myPaddle.segmentx[0] + myPaddle.width / 16
+      && this.x > myPaddle.segmentx[0] - myPaddle.width / 16){
+      // Checks to see if ball is currently touching the section of the paddle, and makes sure it isn't hitting on the way up
       if (this.y < myPaddle.y && this.yDirection > 0){
         this.yDirection = -this.yDirection;
+        this.xDirection = -1;
+      }
+    }
+
+    // Checks to see if the paddle is about to hit the second left most segment of the paddle
+    if (this.y + this.radius + this.ySpeed >= myPaddle.y && this.x < myPaddle.segmentx[1] + myPaddle.width / 16
+      && this.x > myPaddle.segmentx[1] - myPaddle.width / 16){
+      // Checks to see if ball is currently touching the section of the paddle, and makes sure it isn't hitting on the way up
+      if (this.y < myPaddle.y && this.yDirection > 0){
+        this.yDirection = -this.yDirection;
+        this.xDirection = -0.67;
+      }
+    }
+
+    // Checks to see if the paddle is about to hit the left middle segment of the paddle
+    if (this.y + this.radius + this.ySpeed >= myPaddle.y && this.x < myPaddle.segmentx[2] + myPaddle.width / 16
+      && this.x > myPaddle.segmentx[2] - myPaddle.width / 16){
+      // Checks to see if ball is currently touching the section of the paddle, and makes sure it isn't hitting on the way up
+      if (this.y < myPaddle.y && this.yDirection > 0){
+        this.yDirection = -this.yDirection;
+        this.xDirection = -0.33;
+      }
+    }
+
+    // Checks to see if the paddle is about to hit the right middle segment of the paddle
+    if (this.y + this.radius + this.ySpeed >= myPaddle.y && this.x < myPaddle.segmentx[3] + myPaddle.width / 16
+      && this.x > myPaddle.segmentx[3] - myPaddle.width / 16){
+      // Checks to see if ball is currently touching the section of the paddle, and makes sure it isn't hitting on the way up
+      if (this.y < myPaddle.y && this.yDirection > 0){
+        this.yDirection = -this.yDirection;
+        this.xDirection = 0.33;
+      }
+    }
+
+    // Checks to see if the paddle is about to hit the second right most segment of the paddle
+    if (this.y + this.radius + this.ySpeed >= myPaddle.y && this.x < myPaddle.segmentx[4] + myPaddle.width / 16
+      && this.x > myPaddle.segmentx[4] - myPaddle.width / 16){
+      // Checks to see if ball is currently touching the section of the paddle, and makes sure it isn't hitting on the way up
+      if (this.y < myPaddle.y && this.yDirection > 0){
+        this.yDirection = -this.yDirection;
+        this.xDirection = 0.67;
+      }
+    }
+
+    // Checks to see if the paddle is about to hit the right most segment of the paddle
+    if (this.y + this.radius + this.ySpeed >= myPaddle.y && this.x < myPaddle.segmentx[5] + myPaddle.width / 16
+      && this.x > myPaddle.segmentx[5] - myPaddle.width / 16){
+      // Checks to see if ball is currently touching the section of the paddle, and makes sure it isn't hitting on the way up
+      if (this.y < myPaddle.y && this.yDirection > 0){
+        this.yDirection = -this.yDirection;
+        this.xDirection = 1;
       }
     }
 
