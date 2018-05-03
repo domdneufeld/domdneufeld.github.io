@@ -176,7 +176,7 @@ class Paddle {
     }
     // Every 24 hits the new row spawned will take one extra hit to destroy
     // This caps at 5, and doesn't reset if you lose a life
-    if (this.hitCount % 24 === 0 && bricks.strength < 5){
+    if (this.hitCount % 24 === 0 && bricks.strength < 6){
       bricks.strength += 1;
     }
     if (this.hitCount % 50 === 0){
@@ -447,6 +447,10 @@ class Brick {
     for (let x = 0; x < this.cols; x++) {
       for (let y = 0; y < this.rows; y++) {
         // Draws bricks with different strengths different colours.
+        if (setOfBricks[x][y] === 6) {
+          fill(255, 0, 0);
+          aBrick = rect(x * this.width, y * this.height, this.width, this.height);
+        }
         if (setOfBricks[x][y] === 5) {
           fill(200, 0, 255);
           aBrick = rect(x * this.width, y * this.height, this.width, this.height);
