@@ -28,7 +28,7 @@ class Paddle {
     this.x = width / 2;
     this.y = height - height / 8;
     this.width = width / 8;
-    this.segments = [0, 1, 2, 3, 4, 5, ];
+    this.segments = [0, 1, 2, 3, 4, 5];
     this.height = width / 32;
     this.segmentx = [0, 1, 2, 3, 4, 5];
 
@@ -89,8 +89,6 @@ class Paddle {
     this.y = height - height / 8;
   }
 }
-
-
 
 class Ball {
   constructor() {
@@ -268,5 +266,4 @@ function keyReleased() {
   if (keyCode === RIGHT_ARROW) {
     myPaddle.right = false;
   }
-
 }
